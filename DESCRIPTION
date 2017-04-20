@@ -1,0 +1,17 @@
+Package: GGEBiplots
+Title: GGE Biplots rendered in ggplot2
+Version: 0.0.1
+Authors@R: c(person("Sam", "Dumble", email = "s.dumble@stats4sd.org", role = c("aut", "cre")),person("Elisa", "Frutos Bernal", email = "efb@usal.es", role = c("aut")),person("Purificacion", "Galindo Villardon", email = "pgalindo@usal.es", role = c("aut")))
+Description: Produces GGE Biplots using ggplot2 to allow for greater visual customisation and flexibility than in the GGEBiplotGUI or gge packages. Code for producing GGE models and determining plotting coordinates modified from GGEBiplotGUI (1.0-9)
+Depends: R (>= 3.3.1)
+License: GPL-2
+Encoding: UTF-8
+LazyData: true
+Imports:
+    ggplot2 (>= 2.2.0),
+    ggforce (>= 0.1.1),
+    scales (>= 0.4.1)
+Suggests:
+    GGEBiplotGUI,
+    gge,
+    agricolae
