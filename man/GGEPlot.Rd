@@ -2,21 +2,21 @@
 % Please edit documentation in R/GGEPlot.R
 \name{GGEPlot}
 \alias{GGEPlot}
-\title{Main plotting function for GGEBiplots. Produces basic biplot unless otherwise specified. 
-Most attributes of graph can either be customised within the function (text size and color) or turned off and then customised by the user using standard ggplot2 commands (titles and axes)}
+\title{GGE biplots}
 \usage{
 GGEPlot(GGEModel, type = 1, d1 = 1, d2 = 2, selectedE = NA,
   selectedG = NA, selectedG1 = NA, selectedG2 = NA,
-  colGen = "forestgreen", colEnv = "blue", sizeGen = 4, sizeEnv = 4,
-  largeSize = 4.5, axis_expand = 1.4, axislabels = TRUE, axes = TRUE,
-  limits = TRUE, titles = TRUE, footnote = TRUE)
+  colGen = "forestgreen", colEnv = "blue", colSegment = "red",
+  colHull = "black", sizeGen = 4, sizeEnv = 4, largeSize = 4.5,
+  axis_expand = 1.4, axislabels = TRUE, axes = TRUE, limits = TRUE,
+  titles = TRUE, footnote = TRUE)
 }
 \arguments{
-\item{GGEModel}{A GGEModel produced from a call to GGEModels()}
+\item{GGEModel}{An object of class "GGEModel" or "gge"}
 
 \item{type}{type of biplot to produce. 1=Basic biplot; 2=Examine environment; 3=Examine genotype; 4=Relationship among environments; 5=Compare two genotypes;
 6=Which won where/what; 7=Discrimination vs. representativeness; 8=Relationship among environments; 9=Mean vs. stability; 10=Relationship among genotypes.
-Defaults to type=1. All other types have available wrapper functions}
+Defaults to type=1. All other types have available wrapper functions which are simpler to use if required}
 
 \item{d1}{component to plot on x axis. Defaults to 1}
 
@@ -33,6 +33,10 @@ Defaults to type=1. All other types have available wrapper functions}
 \item{colGen}{colour for genotype attributes on biplot. Defaults to "forestgreen"}
 
 \item{colEnv}{colour for environment attributes on biplot. Defaults to "blue"}
+
+\item{colSegment}{colour for segment or circle lines. Defaults to "red"}
+
+\item{colHull}{colour for hull in WWWW plot. Defaults to "black"}
 
 \item{sizeGen}{text size for genotype labels on biplot. Defaults to 4}
 
@@ -53,14 +57,16 @@ Defaults to type=1. All other types have available wrapper functions}
 \item{footnote}{TRUE/FALSE. Include footnote}
 }
 \description{
-Main plotting function for GGEBiplots. Produces basic biplot unless otherwise specified. 
-Most attributes of graph can either be customised within the function (text size and color) or turned off and then customised by the user using standard ggplot2 commands (titles and axes)
+Produces a basic biplot unless otherwise specified
+Nearly all attributes of graph can either be customised within the function (text size and color) or turned off. 
+Object return is a standard ggplot object and so can be added to or modified using standard ggplot2 functions if required
 }
 \examples{
 library(agricolae)
 data(plrv)
-GxEMeans<-tapply(plrv$Yield,list(plrv$Genotype,plrv$Locality),mean,na.rm=T)
-GGE<-GGEModels(GxEMeans)
-GGEPlot(GGE)
+GxEMeans<-tapply(plrv$Yield,list(plrv$Genotype,plrv$Locality),mean,na.rm=TRUE)
+GGE<-GGEModel(GxEMeans)
+GGEPlot(GGE)#' 
 }
+\keyword{Biplot}
 \keyword{GGE}

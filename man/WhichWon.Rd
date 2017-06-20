@@ -7,19 +7,20 @@
 WhichWon(GGEModel, axis_expand = 1.6, ...)
 }
 \arguments{
-\item{GGEModel}{A GGEModel produced from a call to GGEModels()}
+\item{GGEModel}{An object of class "GGEModel" or "gge"}
 
-\item{...}{Other arguments sent to GGEPlot()}
+\item{axis_expand}{multiplication factor to expand the axis limits by to enable fitting of labels. Defaults to 1.6 for the Which Won Plot}
+
+\item{...}{Other arguments sent to \code{\link[GGEBiplots]{GGEPlot}}}
 }
 \description{
-Which won where/what
+Identifying the 'best' cultivar in each environment
 }
 \examples{
 library(agricolae)
 data(plrv)
-GxEMeans<-tapply(plrv$Yield,list(plrv$Genotype,plrv$Locality),mean,na.rm=T)
-GGE<-GGEModels(GxEMeans)
-GGEPlot(GGE)
+GxEMeans<-tapply(plrv$Yield,list(plrv$Genotype,plrv$Locality),mean,na.rm=TRUE)
+GGE<-GGEModel(GxEMeans)
 WhichWon(GGE)
 }
 \keyword{GGE}

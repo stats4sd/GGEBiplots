@@ -1,10 +1,13 @@
-#' Main plotting function for GGEBiplots. Produces basic biplot unless otherwise specified. 
-#' Most attributes of graph can either be customised within the function (text size and color) or turned off and then customised by the user using standard ggplot2 commands (titles and axes)
-#'
-#' @param GGEModel A GGEModel produced from a call to GGEModels()
+#' GGE biplots
+#' 
+#' Produces a basic biplot unless otherwise specified
+#' Nearly all attributes of graph can either be customised within the function (text size and color) or turned off. 
+#' Object return is a standard ggplot object and so can be added to or modified using standard ggplot2 functions if required
+#' 
+#' @param GGEModel An object of class "GGEModel" or "gge"
 #' @param type type of biplot to produce. 1=Basic biplot; 2=Examine environment; 3=Examine genotype; 4=Relationship among environments; 5=Compare two genotypes;
 #' 6=Which won where/what; 7=Discrimination vs. representativeness; 8=Relationship among environments; 9=Mean vs. stability; 10=Relationship among genotypes.
-#' Defaults to type=1. All other types have available wrapper functions
+#' Defaults to type=1. All other types have available wrapper functions which are simpler to use if required
 #' @param d1 component to plot on x axis. Defaults to 1
 #' @param d2 component to plot on y axis. Defaults to 1
 #' @param selectedE environment to examine when type=2. Must be a string which perfectly matches an environment label 
@@ -13,6 +16,8 @@
 #' @param selectedG2 genotype to compare when type=5. Must be a string which perfectly matches a genotype label and not equal to selectedG1
 #' @param colGen colour for genotype attributes on biplot. Defaults to "forestgreen"
 #' @param colEnv colour for environment attributes on biplot. Defaults to "blue"
+#' @param colSegment colour for segment or circle lines. Defaults to "red"
+#' @param colHull colour for hull in WWWW plot. Defaults to "black"
 #' @param sizeGen text size for genotype labels on biplot. Defaults to 4
 #' @param sizeEnv text size for environment labels on biplot. Defaults to 4
 #' @param largeSize text size to use for larger labels on type=5 (for the two selected genotypes) and type=6 (for the "winners"). Defaults to 4.5
@@ -22,41 +27,78 @@
 #' @param limits TRUE/FALSE. Include calls to scale_x_continuous() and scale_y_continuous()
 #' @param titles TRUE/FALSE. Include title
 #' @param footnote TRUE/FALSE. Include footnote
-#' @keywords GGE
-#' @export
+#' @keywords GGE Biplot
+#' @export 
 #' @examples
 #' library(agricolae)
 #' data(plrv)
-#' GxEMeans<-tapply(plrv$Yield,list(plrv$Genotype,plrv$Locality),mean,na.rm=T)
-#' GGE<-GGEModels(GxEMeans)
-#' GGEPlot(GGE)
+#' GxEMeans<-tapply(plrv$Yield,list(plrv$Genotype,plrv$Locality),mean,na.rm=TRUE)
+#' GGE<-GGEModel(GxEMeans)
+#' GGEPlot(GGE)#' 
+#' @importFrom ggplot2 aes arrow coord_fixed element_text geom_abline geom_hline geom_point geom_polygon geom_segment geom_text geom_vline ggplot ggtitle labs layer_scales scale_color_manual scale_size_manual scale_x_continuous scale_y_continuous theme theme_bw xlab ylab
+#' @importFrom ggforce geom_arc geom_circle
+#' @importFrom scales alpha squish
+#' @importFrom grDevices chull
+#' @importFrom grid unit 
+
 GGEPlot<-function(GGEModel,type=1,d1=1,d2=2,  selectedE=NA ,  selectedG=NA,selectedG1=NA,selectedG2=NA,
-                  colGen="forestgreen",colEnv="blue",sizeGen=4,sizeEnv=4,largeSize=4.5,axis_expand=1.4,
+                  colGen="forestgreen",colEnv="blue",colSegment="red",colHull="black",sizeGen=4,sizeEnv=4,largeSize=4.5,axis_expand=1.4,
                   axislabels=TRUE,axes=TRUE,limits=TRUE,titles=TRUE,footnote=TRUE){
-  require(ggplot2)
-  require(scales)
-  require(ggforce)
-  coordgenotype=GGEModel$coordgenotype[,c(d1,d2)];coordenviroment=GGEModel$coordenviroment[,c(d1,d2)];xtext=GGEModel$xtext;ytext=GGEModel$ytext
-  valorespropios=GGEModel$valorespropios[c(d1,d2)];vartotal=GGEModel$vartotal;varexpl=GGEModel$varexpl[c(d1,d2)];labelgen=GGEModel$labelgen;
+ # library("ggplot2")
+ # library("scales")
+ # library("ggforce")
+#  library("gge")
+#  library("stats")
+#  library("grDevices")
+
+  fail<-1
+  if(class(GGEModel)=="GGEModel"){
+
+  coordgenotype=GGEModel$coordgenotype[,c(d1,d2)];coordenviroment=GGEModel$coordenviroment[,c(d1,d2)]
+varexpl=GGEModel$varexpl[c(d1,d2)];labelgen=GGEModel$labelgen;
   labelenv=GGEModel$labelenv;ejes=GGEModel$axes[c(d1,d2)];matrixdata=GGEModel$matrixdata
+centering=GGEModel$centering;SVD=GGEModel$SVD;scaling=GGEModel$scaling
+
+  fail<-0
+  
+  }
+  if(class(GGEModel)=="gge"){ 
+  
+    coordgenotype=GGEModel$genCoord[,c(d1,d2)];coordenviroment=GGEModel$locCoord[,c(d1,d2)]
+    varexpl=round(100*GGEModel$R2[c(d1,d2)],2);labelgen=rownames(GGEModel$x);
+    labelenv=colnames(GGEModel$x);ejes=paste("AXIS",1:ncol(diag(svd(GGEModel$x)$d)), sep = "");matrixdata=GGEModel$x
+    fail<-0
+    centering=ifelse(GGEModel$center==TRUE,2,0);
+    SVD=ifelse(GGEModel$method=="svd",2,5);
+    scaling=ifelse(GGEModel$scale==TRUE,1,0)
+    
+    
+      }
+  
+  if(fail==1){stop(paste("Object",deparse(substitute(GGEModel)),"is not of class 'gge' or 'GGEModel'"))}
+  if(centering==0){stop("GGEPlot() does not work for GGE models produced without centering")}
   
   
   plotdata<-data.frame(rbind(data.frame(coordgenotype,type="genotype",label=labelgen),data.frame(coordenviroment,type="environment",label=labelenv)))
   colnames(plotdata)[1:2]<-c("d1","d2")
   plotdata$type<-factor(plotdata$type)
   
+  
+  ratio.values <- (max(plotdata$d1)-min(plotdata$d1))/(max(plotdata$d2)-min(plotdata$d2))
+  
+  
   GGE1<-ggplot(data=plotdata,aes(x=d1,y=d2,group="type"))+theme_bw()+
     scale_color_manual(values=c(colGen,colEnv)) +
     scale_size_manual(values=c(sizeGen,sizeEnv))+
-    coord_fixed()     
+    coord_fixed(ratio.values)     
   
   if(axislabels==TRUE){
-    GGE1<-GGE1+xlab(paste(ejes[1],varexpl[1], "%", sep = " "))+ylab(paste(ejes[2], varexpl[2],"%", sep = " "))
+    GGE1<-GGE1+xlab(paste(ejes[1],format(varexpl[1],nsmall=2), "%", sep = " "))+ylab(paste(ejes[2], format(varexpl[2],nsmall=2),"%", sep = " "))
   }
-  if(axes==TRUE){
+  if(axes==TRUE&centering!=0){
     GGE1<-GGE1+geom_hline(yintercept=0)+geom_vline(xintercept=0)
   }
-  if(limits==TRUE){
+  if(limits==TRUE&centering!=0){
     GGE1<-GGE1+scale_x_continuous(limits=c(min(plotdata$d1*axis_expand),max(plotdata$d1*axis_expand)),expand=c(0,0))+
       scale_y_continuous(limits=c(min(plotdata$d2*axis_expand),max(plotdata$d2*axis_expand)),expand=c(0,0))
   }
@@ -171,13 +213,18 @@ GGEPlot<-function(GGEModel,type=1,d1=1,d2=2,  selectedE=NA ,  selectedG=NA,selec
   
   if(type==6){ 
     # Which-won-where
-    indice = c(chull(coordgenotype[, 1], coordgenotype[,2]))
+    indice = c(grDevices::chull(coordgenotype[, 1], coordgenotype[,2]))
     www<-data.frame(coordgenotype[indice,])
     
     
     indice<-c(indice,indice[1])
     ######################################
     segs<-NULL
+    
+    
+    limx<-layer_scales(GGE1)$x$limits
+    limy<-layer_scales(GGE1)$y$limits
+    
     i <- 1
     while (is.na(indice[i + 1]) == FALSE) 
     {
@@ -188,28 +235,37 @@ GGEPlot<-function(GGEModel,type=1,d1=1,d2=2,  selectedE=NA ,  selectedG=NA,selec
       xint<-ifelse(xint<0,min(coordenviroment[, 1],coordgenotype[, 1]), max(coordenviroment[, 1],coordgenotype[, 1]))
       yint<-mperp*xint
       
-      m2<-max(abs(c(xint,yint)))
-      m3<-which(abs(c(xint,yint))==max(abs(c(xint,yint))))
-      if(m3==1&xint<0)sl1<-(c(xint,yint)/m2)*abs(min(plotdata$d1))*axis_expand
-      if(m3==1&xint>0)sl1<-(c(xint,yint)/m2)*max(plotdata$d1)*axis_expand
-      if(m3==2&yint<0)sl1<-(c(xint,yint)/m2)*abs(min(plotdata$d2))*axis_expand
-      if(m3==2&yint>0)sl1<-(c(xint,yint)/m2)*max(plotdata$d2)*axis_expand                                                  
+      xprop<-ifelse(xint<0,xint/limx[1],xint/limx[2])
+      yprop<-ifelse(yint<0,yint/limy[1],yint/limy[2])
+  
+      m3<-which(c(xprop,yprop)==max(c(xprop,yprop)))
+      m2<-abs(c(xint,yint)[m3])
+      if(m3==1&xint<0)sl1<-(c(xint,yint)/m2)*abs(limx[1])
+      if(m3==1&xint>0)sl1<-(c(xint,yint)/m2)*limx[2]
+      if(m3==2&yint<0)sl1<-(c(xint,yint)/m2)*abs(limy[1])
+      if(m3==2&yint>0)sl1<-(c(xint,yint)/m2)*limy[2]                                           
       
       segs<-rbind(segs,sl1)
       i <- i + 1
     }
     rownames(segs)<-NULL
-    segs<-data.frame(segs)        
+    colnames(segs)<-NULL
+    segs<-data.frame(segs)   
+    
+  
+    
+    colnames(www)<-c("X1","X2")
     
     winners<-plotdata[plotdata$type=="genotype",][indice[-1],]
     others<-plotdata[!rownames(plotdata)%in%rownames(winners),]
     
-    GGE2<-GGE1+geom_polygon(aes(x=X1,y=X2),data=www,fill=NA,col="black",size=0.8)+
-      geom_segment(data=segs,aes(x=X1,y=X2),xend=0,yend=0,linetype=2) +
+    GGE2<-GGE1+geom_polygon(aes(x=X1,y=X2),data=www,fill=NA,col=colHull,size=0.8)+
+      geom_segment(data=segs,aes(x=X1,y=X2),xend=0,yend=0,linetype=2,col=colSegment,size=0.75) +
       geom_text(aes(col=type,label=label,size=type),show.legend = FALSE,data=others)+
       geom_text(aes(label=label,x=d1,y=d2),show.legend = FALSE,hjust="outward",vjust="outward",data=winners,col=colGen,size=largeSize,fontface="bold")
     
-    if(titles==TRUE){GGE2<-GGE2+ggtitle("Which Won Where/What")}  
+    
+       if(titles==TRUE){GGE2<-GGE2+ggtitle("Which Won Where/What")}  
     
   }
   
@@ -218,7 +274,7 @@ GGEPlot<-function(GGEModel,type=1,d1=1,d2=2,  selectedE=NA ,  selectedG=NA,selec
     circles<-data.frame(x0=0,y0=0,start=0,end=pi*2,radio =1:5* max((max(coordenviroment[1, ]) - min(coordenviroment[1, ])), (max(coordenviroment[2,]) - min(coordenviroment[2, ])))/10)
     
     
-    GGE2<-GGE1+geom_arc(aes(r=radio,x0=x0,y0=y0,start=start,end=end),data=circles,col="gray",inherit.aes=F, na.rm=TRUE)+
+    GGE2<-GGE1+geom_arc(aes(r=radio,x0=x0,y0=y0,start=start,end=end),data=circles,col=colSegment,inherit.aes=F, na.rm=TRUE)+
       geom_segment(xend=0,yend=0,x=mean(coordenviroment[,1]),y=mean(coordenviroment[,2]),arrow =arrow(ends ="first",length=unit(0.1,"inches") ),size=1,col=colEnv)+
       geom_abline(intercept=0,slope=mean(coordenviroment[, 2])/mean(coordenviroment[,1]),col=colEnv)+
       geom_segment(xend=0,yend=0,col=alpha(colEnv,0.5),data=subset(plotdata,type=="environment"),linetype=2)+
@@ -242,7 +298,7 @@ GGEPlot<-function(GGEModel,type=1,d1=1,d2=2,  selectedE=NA ,  selectedG=NA,selec
     GGE2<-GGE1+ 
       geom_abline(intercept=0,slope=med2/med1,col=colEnv,size=0.8)+
       geom_abline(intercept=0,slope=-med1/med2,col=colEnv,size=0.8)+
-      geom_arc(aes(r=radio,x0=x0,y0=y0,start=start,end=end),data=circles,col="gray",inherit.aes=F, na.rm=TRUE)+
+      geom_arc(aes(r=radio,x0=x0,y0=y0,start=start,end=end),data=circles,col=colSegment,inherit.aes=F, na.rm=TRUE)+
       geom_segment(x=0, y=0,xend=xcoord,yend=ycoord,arrow =arrow(length=unit(0.15,"inches") ),size=1,col=colEnv)+
       geom_text(aes(label=label),show.legend = FALSE,data=subset(plotdata,type=="environment"),col=colEnv,size=sizeEnv)
     
@@ -325,15 +381,16 @@ GGEPlot<-function(GGEModel,type=1,d1=1,d2=2,  selectedE=NA ,  selectedG=NA,selec
   }
 
   if(footnote==T){
-    centertext<-ifelse(GGEModel$centering==1|GGEModel$centering=="global","Global-Centered E+G+GE",
-                       ifelse(GGEModel$centering==2|GGEModel$centering=="tester","Tester-Centered G+GE",
-                              ifelse(GGEModel$centering==3|GGEModel$centering=="double","Double-Centred GE","No Centering")))
-    SVPtext<-ifelse(GGEModel$SVP==1|GGEModel$SVP=="row","Row Metric Preserving",
-                    ifelse(GGEModel$SVP==2|GGEModel$SVP=="column","Column Metric Preserving",
-                           ifelse(GGEModel$SVP==3|GGEModel$SVP=="dual","Dual Metric Preserving","Symmetrical")))
-    Scalingtext<-ifelse(GGEModel$scaling==1|GGEModel$scaling=="sd","scaling by SD","no scaling")
+    centertext<-ifelse(centering==1|centering=="global","Global-Centered E+G+GE",
+                       ifelse(centering==2|centering=="tester","Tester-Centered G+GE",
+                              ifelse(centering==3|centering=="double","Double-Centred GE","No Centering")))
+    SVDtext<-ifelse(SVD==1|SVD=="row","Row Metric Preserving SVD",
+                    ifelse(SVD==2|SVD=="column","Column Metric Preserving SVD",
+                           ifelse(SVD==3|SVD=="dual","Dual Metric Preserving SVD",
+  ifelse(SVD==4|SVD=="symmetrical","Symmetrical SVD","NIPALS algorithm"))))
+    Scalingtext<-ifelse(scaling==1|scaling=="sd","scaling by SD","no scaling")
     footnotetxt=paste("\nGGE Biplot showing components ",d1," and ",d2," explaining ",sum(varexpl),"% of the total variation\nusing ",
-                      SVPtext," SVP and ",centertext," with ",Scalingtext,sep="")
+                      SVDtext," and ",centertext," with ",Scalingtext,sep="")
     
     GGE2<-GGE2+ labs(caption = footnotetxt)+theme(plot.caption = element_text(size=8,hjust=0,face="italic"))
   }

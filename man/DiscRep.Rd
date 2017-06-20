@@ -7,19 +7,18 @@
 DiscRep(GGEModel, ...)
 }
 \arguments{
-\item{GGEModel}{A GGEModel produced from a call to GGEModels()}
+\item{GGEModel}{An object of class "GGEModel" or "gge"}
 
-\item{...}{Other arguments sent to GGEPlot()}
+\item{...}{Other arguments sent to \code{\link[GGEBiplots]{GGEPlot}}}
 }
 \description{
-Discrimination vs. representativeness
+Evaluating the environments based on both discriminating ability and representativeness
 }
 \examples{
 library(agricolae)
 data(plrv)
-GxEMeans<-tapply(plrv$Yield,list(plrv$Genotype,plrv$Locality),mean,na.rm=T)
-GGE<-GGEModels(GxEMeans)
-GGEPlot(GGE)
+GxEMeans<-tapply(plrv$Yield,list(plrv$Genotype,plrv$Locality),mean,na.rm=TRUE)
+GGE<-GGEModel(GxEMeans)
 DiscRep(GGE)
 }
 \keyword{GGE}

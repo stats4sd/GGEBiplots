@@ -2,28 +2,27 @@
 % Please edit documentation in R/CompareGens.R
 \name{CompareGens}
 \alias{CompareGens}
-\title{Compare two genotypes}
+\title{Compare the performance of two genotypes across all environments}
 \usage{
-CompareGens(GGEModel, selectedG1, selectedG2, ...)
+CompareGens(GGEModel, G1, G2, ...)
 }
 \arguments{
-\item{GGEModel}{A GGEModel produced from a call to GGEModels()}
+\item{GGEModel}{An object of class "GGEModel" or "gge"}
 
-\item{selectedG1}{genotype to compare when type=5. Must be a string which perfectly matches a genotype label}
+\item{G1}{genotype to compare. Must be a string which perfectly matches a genotype label}
 
-\item{selectedG2}{genotype to compare when type=5. Must be a string which perfectly matches a genotype label and not equal to selectedG1}
+\item{G2}{genotype to compare. Must be a string which perfectly matches a genotype label and not equal to G1}
 
-\item{...}{Other arguments sent to GGEPlot()}
+\item{...}{Other arguments sent to \code{\link[GGEBiplots]{GGEPlot}}}
 }
 \description{
-Compare two genotypes
+Compare the performance of two genotypes across all environments
 }
 \examples{
 library(agricolae)
 data(plrv)
-GxEMeans<-tapply(plrv$Yield,list(plrv$Genotype,plrv$Locality),mean,na.rm=T)
-GGE<-GGEModels(GxEMeans)
-GGEPlot(GGE)
-CompareGens(GGE,selectedG1="Unica",selectedG2="Canchan")
+GxEMeans<-tapply(plrv$Yield,list(plrv$Genotype,plrv$Locality),mean,na.rm=TRUE)
+GGE<-GGEModel(GxEMeans)
+CompareGens(GGE,"Unica","Canchan")
 }
 \keyword{GGE}

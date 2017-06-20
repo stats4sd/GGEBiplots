@@ -2,24 +2,23 @@
 % Please edit documentation in R/RankGen.R
 \name{RankGen}
 \alias{RankGen}
-\title{Ranking Genotypes}
+\title{Ranking genotypes with respect to the ideal genotype}
 \usage{
 RankGen(GGEModel, ...)
 }
 \arguments{
-\item{GGEModel}{A GGEModel produced from a call to GGEModels()}
+\item{GGEModel}{An object of class "GGEModel" or "gge"}
 
-\item{...}{Other arguments sent to GGEPlot()}
+\item{...}{Other arguments sent to \code{\link[GGEBiplots]{GGEPlot}}}
 }
 \description{
-Ranking Genotypes
+Ranking genotypes with respect to the ideal genotype
 }
 \examples{
 library(agricolae)
 data(plrv)
-GxEMeans<-tapply(plrv$Yield,list(plrv$Genotype,plrv$Locality),mean,na.rm=T)
-GGE<-GGEModels(GxEMeans)
-GGEPlot(GGE)
+GxEMeans<-tapply(plrv$Yield,list(plrv$Genotype,plrv$Locality),mean,na.rm=TRUE)
+GGE<-GGEModel(GxEMeans)
 RankGen(GGE)
 }
 \keyword{GGE}

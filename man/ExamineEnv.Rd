@@ -4,24 +4,23 @@
 \alias{ExamineEnv}
 \title{Examine an environment}
 \usage{
-ExamineEnv(GGEModel, selectedE, ...)
+ExamineEnv(GGEModel, Env, ...)
 }
 \arguments{
-\item{GGEModel}{A GGEModel produced from a call to GGEModels()}
+\item{GGEModel}{An object of class "GGEModel" or "gge"}
 
-\item{selectedE}{environment to examine. Must be a string which perfectly matches an environment label}
+\item{Env}{environment to examine. Must be a string which perfectly matches an environment label}
 
-\item{...}{Other arguments sent to GGEPlot()}
+\item{...}{Other arguments sent to \code{\link[GGEBiplots]{GGEPlot}}}
 }
 \description{
-Examine an environment
+Ranking the cultivars based on their performance in any given environment
 }
 \examples{
 library(agricolae)
 data(plrv)
-GxEMeans<-tapply(plrv$Yield,list(plrv$Genotype,plrv$Locality),mean,na.rm=T)
-GGE<-GGEModels(GxEMeans)
-GGEPlot(GGE)
-ExamineEnv(GGE,selectedE="Ayac")
+GxEMeans<-tapply(plrv$Yield,list(plrv$Genotype,plrv$Locality),mean,na.rm=TRUE)
+GGE<-GGEModel(GxEMeans)
+ExamineEnv(GGE,"Ayac")
 }
 \keyword{GGE}

@@ -2,24 +2,23 @@
 % Please edit documentation in R/RankEnv.R
 \name{RankEnv}
 \alias{RankEnv}
-\title{Ranking environments}
+\title{Ranking environments with respect to the ideal environment}
 \usage{
 RankEnv(GGEModel, ...)
 }
 \arguments{
-\item{GGEModel}{A GGEModel produced from a call to GGEModels()}
+\item{GGEModel}{An object of class "GGEModel" or "gge"}
 
-\item{...}{Other arguments sent to GGEPlot()}
+\item{...}{Other arguments sent to \code{\link[GGEBiplots]{GGEPlot}}}
 }
 \description{
-Ranking environments
+Ranking environments with respect to the ideal environment
 }
 \examples{
 library(agricolae)
 data(plrv)
-GxEMeans<-tapply(plrv$Yield,list(plrv$Genotype,plrv$Locality),mean,na.rm=T)
-GGE<-GGEModels(GxEMeans)
-GGEPlot(GGE)
+GxEMeans<-tapply(plrv$Yield,list(plrv$Genotype,plrv$Locality),mean,na.rm=TRUE)
+GGE<-GGEModel(GxEMeans)
 RankEnv(GGE)
 }
 \keyword{GGE}

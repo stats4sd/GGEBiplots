@@ -4,24 +4,23 @@
 \alias{ExamineGen}
 \title{Examine a genotype}
 \usage{
-ExamineGen(GGEModel, selectedE, ...)
+ExamineGen(GGEModel, Gen, ...)
 }
 \arguments{
-\item{GGEModel}{A GGEModel produced from a call to GGEModels()}
+\item{GGEModel}{An object of class "GGEModel" or "gge"}
 
-\item{...}{Other arguments sent to GGEPlot()}
+\item{Gen}{genotype to examine. Must be a string which perfectly matches an genotype label}
 
-\item{selectedG}{genotype to examine. Must be a string which perfectly matches an genotype label}
+\item{...}{Other arguments sent to \code{\link[GGEBiplots]{GGEPlot}}}
 }
 \description{
-Examine a genotype
+Ranking the environments based on the relative performance of any given cultivar
 }
 \examples{
 library(agricolae)
 data(plrv)
-GxEMeans<-tapply(plrv$Yield,list(plrv$Genotype,plrv$Locality),mean,na.rm=T)
-GGE<-GGEModels(GxEMeans)
-GGEPlot(GGE)
-ExamineGen(GGE,selectedG="Unica")
+GxEMeans<-tapply(plrv$Yield,list(plrv$Genotype,plrv$Locality),mean,na.rm=TRUE)
+GGE<-GGEModel(GxEMeans)
+ExamineGen(GGE,"Unica")
 }
 \keyword{GGE}
