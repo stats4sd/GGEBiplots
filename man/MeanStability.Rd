@@ -2,12 +2,12 @@
 % Please edit documentation in R/MeanStability.R
 \name{MeanStability}
 \alias{MeanStability}
-\title{Mean vs Stability}
+\title{Mean vs. Stability Biplot}
 \usage{
 MeanStability(GGEModel, ...)
 }
 \arguments{
-\item{GGEModel}{An object of class "GGEModel" or "gge"}
+\item{GGEModel}{An object of class \code{GGEModel} or \code{gge}}
 
 \item{...}{Other arguments sent to \code{\link[GGEBiplots]{GGEPlot}}}
 }
@@ -15,10 +15,9 @@ MeanStability(GGEModel, ...)
 Evaluating cultivars based on both average yield and stability
 }
 \examples{
-library(agricolae)
-data(plrv)
-GxEMeans<-tapply(plrv$Yield,list(plrv$Genotype,plrv$Locality),mean,na.rm=TRUE)
-GGE<-GGEModel(GxEMeans)
-MeanStability(GGE)
+library(GGEBiplotGUI)
+data(Ontario)
+GGE1<-GGEModel(Ontario)
+MeanStability(GGE1)
 }
 \keyword{GGE}

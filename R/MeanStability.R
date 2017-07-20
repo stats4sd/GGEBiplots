@@ -1,16 +1,15 @@
-#' Mean vs Stability
+#' Mean vs. Stability Biplot
 #' 
 #' Evaluating cultivars based on both average yield and stability 
-#' @param GGEModel An object of class "GGEModel" or "gge"
+#' @param GGEModel An object of class \code{GGEModel} or \code{gge}
 #' @param ... Other arguments sent to \code{\link[GGEBiplots]{GGEPlot}}
 #' @keywords GGE
 #' @export
 #' @examples
-#' library(agricolae)
-#' data(plrv)
-#' GxEMeans<-tapply(plrv$Yield,list(plrv$Genotype,plrv$Locality),mean,na.rm=TRUE)
-#' GGE<-GGEModel(GxEMeans)
-#' MeanStability(GGE)
+#' library(GGEBiplotGUI)
+#' data(Ontario)
+#' GGE1<-GGEModel(Ontario)
+#' MeanStability(GGE1)
 MeanStability<-function(GGEModel,...){
   GGEPlot(GGEModel,type=9,...)
 }

@@ -2,14 +2,12 @@
 % Please edit documentation in R/WhichWon.R
 \name{WhichWon}
 \alias{WhichWon}
-\title{Which won where/what}
+\title{Which Won Where/What Biplot}
 \usage{
-WhichWon(GGEModel, axis_expand = 1.6, ...)
+WhichWon(GGEModel, ...)
 }
 \arguments{
-\item{GGEModel}{An object of class "GGEModel" or "gge"}
-
-\item{axis_expand}{multiplication factor to expand the axis limits by to enable fitting of labels. Defaults to 1.6 for the Which Won Plot}
+\item{GGEModel}{An object of class \code{GGEModel} or \code{gge}}
 
 \item{...}{Other arguments sent to \code{\link[GGEBiplots]{GGEPlot}}}
 }
@@ -17,10 +15,9 @@ WhichWon(GGEModel, axis_expand = 1.6, ...)
 Identifying the 'best' cultivar in each environment
 }
 \examples{
-library(agricolae)
-data(plrv)
-GxEMeans<-tapply(plrv$Yield,list(plrv$Genotype,plrv$Locality),mean,na.rm=TRUE)
-GGE<-GGEModel(GxEMeans)
-WhichWon(GGE)
+library(GGEBiplotGUI)
+data(Ontario)
+GGE1<-GGEModel(Ontario)
+WhichWon(GGE1)
 }
 \keyword{GGE}

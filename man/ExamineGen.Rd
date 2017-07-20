@@ -2,12 +2,12 @@
 % Please edit documentation in R/ExamineGen.R
 \name{ExamineGen}
 \alias{ExamineGen}
-\title{Examine a genotype}
+\title{Examine a genotype biplot}
 \usage{
 ExamineGen(GGEModel, Gen, ...)
 }
 \arguments{
-\item{GGEModel}{An object of class "GGEModel" or "gge"}
+\item{GGEModel}{An object of class \code{GGEModel} or \code{gge}}
 
 \item{Gen}{genotype to examine. Must be a string which perfectly matches an genotype label}
 
@@ -17,10 +17,9 @@ ExamineGen(GGEModel, Gen, ...)
 Ranking the environments based on the relative performance of any given cultivar
 }
 \examples{
-library(agricolae)
-data(plrv)
-GxEMeans<-tapply(plrv$Yield,list(plrv$Genotype,plrv$Locality),mean,na.rm=TRUE)
-GGE<-GGEModel(GxEMeans)
-ExamineGen(GGE,"Unica")
+library(GGEBiplotGUI)
+data(Ontario)
+GGE1<-GGEModel(Ontario)
+ExamineGen(GGE1,"cas")
 }
 \keyword{GGE}

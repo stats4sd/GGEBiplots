@@ -2,71 +2,103 @@
 % Please edit documentation in R/GGEPlot.R
 \name{GGEPlot}
 \alias{GGEPlot}
-\title{GGE biplots}
+\title{GGE biplots with \pkg{ggplot2}}
 \usage{
 GGEPlot(GGEModel, type = 1, d1 = 1, d2 = 2, selectedE = NA,
   selectedG = NA, selectedG1 = NA, selectedG2 = NA,
   colGen = "forestgreen", colEnv = "blue", colSegment = "red",
   colHull = "black", sizeGen = 4, sizeEnv = 4, largeSize = 4.5,
-  axis_expand = 1.4, axislabels = TRUE, axes = TRUE, limits = TRUE,
+  axis_expand = 1.2, axislabels = TRUE, axes = TRUE, limits = TRUE,
   titles = TRUE, footnote = TRUE)
 }
 \arguments{
-\item{GGEModel}{An object of class "GGEModel" or "gge"}
+\item{GGEModel}{An object of class \code{GGEModel} or \code{gge}}
 
-\item{type}{type of biplot to produce. 1=Basic biplot; 2=Examine environment; 3=Examine genotype; 4=Relationship among environments; 5=Compare two genotypes;
-6=Which won where/what; 7=Discrimination vs. representativeness; 8=Relationship among environments; 9=Mean vs. stability; 10=Relationship among genotypes.
-Defaults to type=1. All other types have available wrapper functions which are simpler to use if required}
+\item{type}{type of biplot to produce. \enumerate{\item Basic biplot. \item
+Examine environment. See \code{\link[GGEBiplots]{ExamineEnv}} \item Examine
+genotype. See \code{\link[GGEBiplots]{ExamineGen}} \item Relationship among
+environments. See \code{\link[GGEBiplots]{EnvRelationship}} \item Compare
+two genotypes. See \code{\link[GGEBiplots]{CompareGens}} \item Which won
+where/what. See \code{\link[GGEBiplots]{WhichWon}} \item Discrimination vs.
+representativeness. See \code{\link[GGEBiplots]{DiscRep}} \item Ranking
+environments. See \code{\link[GGEBiplots]{RankEnv}} \item Mean vs.
+stability. See \code{\link[GGEBiplots]{MeanStability}} \item Ranking
+gentoypes See \code{\link[GGEBiplots]{RankGen}}}}
 
 \item{d1}{component to plot on x axis. Defaults to 1}
 
-\item{d2}{component to plot on y axis. Defaults to 1}
+\item{d2}{component to plot on y axis. Defaults to 2}
 
-\item{selectedE}{environment to examine when type=2. Must be a string which perfectly matches an environment label}
+\item{selectedE}{name of the environment to examine when type=2. Must be a 
+string which matches an environment label}
 
-\item{selectedG}{genotype to examine when type=3. Must be a string which perfectly matches a genotype label}
+\item{selectedG}{name of the genotype to examine when type=3. Must be a string
+which matches a genotype label}
 
-\item{selectedG1}{genotype to compare when type=5. Must be a string which perfectly matches a genotype label}
+\item{selectedG1}{name of a genotype to compare when type=5. Must be a string 
+which matches a genotype label}
 
-\item{selectedG2}{genotype to compare when type=5. Must be a string which perfectly matches a genotype label and not equal to selectedG1}
+\item{selectedG2}{name of a genotype to compare when type=5. Must be a string 
+which matches a genotype label and not equal to selectedG1}
 
-\item{colGen}{colour for genotype attributes on biplot. Defaults to "forestgreen"}
+\item{colGen}{colour for genotype attributes on biplot. Defaults to 
+"forestgreen"}
 
 \item{colEnv}{colour for environment attributes on biplot. Defaults to "blue"}
 
 \item{colSegment}{colour for segment or circle lines. Defaults to "red"}
 
-\item{colHull}{colour for hull in WWWW plot. Defaults to "black"}
+\item{colHull}{colour for hull when type=6. Defaults to "black"}
 
-\item{sizeGen}{text size for genotype labels on biplot. Defaults to 4}
+\item{sizeGen}{text size for genotype labels. Defaults to 4}
 
-\item{sizeEnv}{text size for environment labels on biplot. Defaults to 4}
+\item{sizeEnv}{text size for environment labels. Defaults to 4}
 
-\item{largeSize}{text size to use for larger labels on type=5 (for the two selected genotypes) and type=6 (for the "winners"). Defaults to 4.5}
+\item{largeSize}{text size to use for larger labels where type=5, used for the
+two selected genotypes, and where type=6, used for the outermost genotypes.
+Defaults to 4.5}
 
-\item{axis_expand}{multiplication factor to expand the axis limits by to enable fitting of labels. Defaults to 1.4}
+\item{axis_expand}{multiplication factor to expand the axis limits by to 
+enable fitting of labels. Defaults to 1.2}
 
-\item{axislabels}{TRUE/FALSE. Include axis labels}
+\item{axislabels}{logical. If TRUE then include automatically generated labels
+for axes}
 
-\item{axes}{TRUE/FALSE. Include axes modifications}
+\item{axes}{logical. If TRUE then include x and y axes going through the 
+origin}
 
-\item{limits}{TRUE/FALSE. Include calls to scale_x_continuous() and scale_y_continuous()}
+\item{limits}{logical. If TRUE then automatically rescale axes}
 
-\item{titles}{TRUE/FALSE. Include title}
+\item{titles}{logical. If TRUE then include automatically generated titles}
 
-\item{footnote}{TRUE/FALSE. Include footnote}
+\item{footnote}{logical. If TRUE then include automatically generated footbote}
+}
+\value{
+A biplot of class \code{ggplot}
 }
 \description{
-Produces a basic biplot unless otherwise specified
-Nearly all attributes of graph can either be customised within the function (text size and color) or turned off. 
-Object return is a standard ggplot object and so can be added to or modified using standard ggplot2 functions if required
+Produces the GGE biplot as an object of class 'ggplot' from a model produced 
+by a call to either \code{\link[GGEBiplots]{GGEModel}} or 
+\code{\link[gge]{gge}}. Nearly all stylistic attributes of output can either 
+be customised within the function or disabled so that the user can customise 
+output to their own liking.
 }
 \examples{
-library(agricolae)
-data(plrv)
-GxEMeans<-tapply(plrv$Yield,list(plrv$Genotype,plrv$Locality),mean,na.rm=TRUE)
-GGE<-GGEModel(GxEMeans)
-GGEPlot(GGE)#' 
+library(GGEBiplotGUI)
+data(Ontario)
+GGE1<-GGEModel(Ontario)
+GGEPlot(GGE1)
+
+#using 'gge' instead
+
+library(gge)
+GGE2<-gge(as.matrix(Ontario))
+GGEPlot(GGE2)
+   
+}
+\references{
+Yan W, Kang M (2003). \emph{GGE Biplot Analysis: A Graphical Tool 
+ for Breeders, Geneticists, and Agronomists}. CRC Press.
 }
 \keyword{Biplot}
 \keyword{GGE}

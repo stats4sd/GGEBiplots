@@ -7,7 +7,7 @@
 RankGen(GGEModel, ...)
 }
 \arguments{
-\item{GGEModel}{An object of class "GGEModel" or "gge"}
+\item{GGEModel}{An object of class \code{GGEModel} or \code{gge}}
 
 \item{...}{Other arguments sent to \code{\link[GGEBiplots]{GGEPlot}}}
 }
@@ -15,10 +15,9 @@ RankGen(GGEModel, ...)
 Ranking genotypes with respect to the ideal genotype
 }
 \examples{
-library(agricolae)
-data(plrv)
-GxEMeans<-tapply(plrv$Yield,list(plrv$Genotype,plrv$Locality),mean,na.rm=TRUE)
-GGE<-GGEModel(GxEMeans)
-RankGen(GGE)
+library(GGEBiplotGUI)
+data(Ontario)
+GGE1<-GGEModel(Ontario)
+RankGen(GGE1)
 }
 \keyword{GGE}

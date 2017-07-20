@@ -1,116 +1,151 @@
-#' Produces GGE model from 2-way table of means
+#' Produces genotype plus genotype-by-environment model from a 2-way table of 
+#' means
 #' 
-#' Calculates the GGE model where presented with a two way table of means with genotypes in rows (and genotype names as row names) and environments in columns (and environment names as column names)
-#' Code to produce the model taken with very few modifications from internal code within \code{\link[GGEBiplotGUI]{GGEBiplot}}
-#' For dealing with missing data then please use the \code{\link[gge]{gge}}
-#'
-#' @param Data wide data frame containing GxE means with genotypes in rows and environments in columns with rownames and colnames indicating genotype names and environment names
-#' @param centering centering method. Options are "tester", "global","double" or "none" for tester centered (G+GE), global centered (E+G+GE), double centred (GE) or no centering. 
-#' Models produced without centering cannot be used in the GGEPlot() function. Defaults to tester centered.
-#' @param scaling scaling method. Options are "sd" or "none"
-#' @param SVD method for singular value partitioning. Options are "row","column","dual" or "symmetrical". Defaults to "column"
-#' @keywords GGE
+#' Calculates the GGE model where presented with a two way table of means with 
+#' genotypes in rows, where genotype names are set as row names, and 
+#' environments in columns, where environment names are set as column names.
+#' This function serves as a command line interface to the internal code
+#' contained within \code{\link[GGEBiplotGUI]{GGEBiplot}}. For dealing with
+#' missing data then a better implementation is available through
+#' \code{\link[gge]{gge}}.
+#' 
+#' @param Data a data frame or matrix containing genotype by environment means 
+#'   with the genotypes in rows and the environments in columns. row names and 
+#'   column names should be set to indicate the genotype names and environment 
+#'   names.
+#' @param centering centering method. Either "tester" for tester centered 
+#'   (G+GE), "global" for global centered (E+G+GE), "double" for double centred 
+#'   (GE) or "none" for no centering. Models produced without centering cannot 
+#'   be used in the \code{\link[GGEBiplots]{GGEPlot}} function.
+#' @param scaling scaling method. Either "sd" for standard deviation or "none" 
+#'   for no scaling.
+#' @param SVP method for singular value partitioning. Either 
+#'   "row","column","dual" or "symmetrical".
+#' @return A list of class \code{GGEModel} containing: 
+#'   \item{coordgenotype}{plotting coordinates for genotypes from all
+#'   components} \item{coordenviroment}{plotting coordinates for environments
+#'   from all components} \item{eigenvalues}{vector of eigenvalues from each
+#'   component} \item{vartotal}{overall variance} \item{varexpl}{percentage of
+#'   variance explained by each component} \item{labelgen}{genotype names} 
+#'   \item{labelenv}{environment names} \item{axes}{axis labels} 
+#'   \item{Data}{scaled and centered input data} \item{centering}{name of
+#'   centering method} \item{scaling}{name of scaling method} \item{SVP}{name of
+#'   SVP method}
+#' @references Yan W, Kang M (2003). \emph{GGE Biplot Analysis: A Graphical Tool
+#'   for Breeders, Geneticists, and Agronomists}. CRC Press.
+#' @references Yan W, Kang M (2002). \emph{Singular-Value Partitioning in Biplot
+#'   Analysis of Multienvironment Trial Data}. Agronomy Journal, 94, 990-996. 
+#'   \url{http://dx.doi.org/10.2134/agronj2002.0990}
+#' @keywords GGE biplot ggplot2
 #' @export
 #' @examples
-#' library(agricolae)
-#' data(plrv)
-#' GxEMeans<-tapply(plrv$Yield,list(plrv$Genotype,plrv$Locality),mean,na.rm=TRUE)
-#' GGE<-GGEModel(GxEMeans)
-#' GGEPlot(GGE)
+#' library(GGEBiplotGUI)
+#' data(Ontario)
+#' GGE1<-GGEModel(Ontario)
+#' GGEPlot(GGE1)
 #' @importFrom stats var
 
-GGEModel <- function(Data,centering="tester",scaling="none",SVD="column") {        
+GGEModel <- function(Data,centering="tester",scaling="none",SVP="column") {        
   labelgen <- rownames(Data)
   labelenv <- colnames(Data)        
-  matrixdata <- matrix(Data, nrow(Data), ncol(Data))
+  Data<-as.matrix(Data)
   
-  if(any(is.na(matrixdata))){stop("missing data in input data frame")}
-  if(any(apply(matrixdata,2,is.numeric)==FALSE)){stop("non-numeric columns in input data frame")}
+  if(any(is.na(Data))){stop("missing data in input data frame")}
+  if(any(apply(Data,2,is.numeric)==FALSE)){stop("not all columns are of class 'numeric'")}
   
   if(!(centering%in%c("none","tester","global","double")|centering%in%0:3)){
     warning(paste("centering method",centering,"not found; defaulting to tester centered"))
     centering="tester"
   }
-  if(!(SVD%in%c("row","column","dual","symmetrical")|SVD%in%1:4)){
-    warning(paste("SVD method",SVD,"not found; defaulting to column metric preserving"))
-    SVD="column"
+  if(!(SVP%in%c("row","column","dual","symmetrical","gge")|SVP%in%0:4)){
+    warning(paste("SVP method",SVP,"not found; defaulting to column metric preserving"))
+    SVP="column"
   }
   if(!(scaling%in%c("sd","none")|scaling%in%0:1)){
     warning(paste("scaling method",scaling,"not found; defaulting to no scaling"))
     sd="none"
   }
-  ejes <- paste("AXIS",1:ncol(diag(svd(matrixdata)$d)), sep = "")
+  labelaxes <- paste("AXIS",1:ncol(diag(svd(Data)$d)), sep = "")
   
   
   # Centering options
   if(centering==1|centering=="global"){
-    meanData = mean(matrixdata)
-    matrixdata <- matrixdata - meanData
+    meanData = mean(Data)
+    Data <- Data - meanData
   }
   if(centering==2|centering=="tester"){
-    meancolData = colMeans(matrixdata)
-    for (i in 1:nrow(matrixdata)){
-      for (j in 1:ncol(matrixdata)){ 
-        matrixdata[i,j] <- matrixdata[i, j] - meancolData[j]
+    meancolData = colMeans(Data)
+    for (i in 1:nrow(Data)){
+      for (j in 1:ncol(Data)){ 
+        Data[i,j] <- Data[i, j] - meancolData[j]
       }}
   }
   if(centering==3|centering=="double"){
-    meanData = mean(matrixdata)
-    meancolData = colMeans(matrixdata)
-    meanrowData = rowMeans(matrixdata)
-    for (i in 1:nrow(matrixdata)){
-      for (j in 1:ncol(matrixdata)){
-        matrixdata[i,j] <- matrixdata[i, j] + meanData - meancolData[j] -meanrowData[i]
+    meanData = mean(Data)
+    meancolData = colMeans(Data)
+    meanrowData = rowMeans(Data)
+    for (i in 1:nrow(Data)){
+      for (j in 1:ncol(Data)){
+        Data[i,j] <- Data[i, j] + meanData - meancolData[j] -meanrowData[i]
       }}
   }
   
   # Scaling options
   if(scaling==1|scaling=="sd"){
-    desviation <- array(, dim = ncol(matrixdata))
-    for (j in 1:ncol(matrixdata)){ desviation[j] <- sqrt(var(matrixdata[,j]))}
-    for (i in 1:nrow(matrixdata)){ for (j in 1:ncol(matrixdata)){ matrixdata[i,j] <- matrixdata[i, j]/desviation[j]}}
+    desviation <- array(, dim = ncol(Data))
+    for (j in 1:ncol(Data)){ desviation[j] <- sqrt(var(Data[,j]))}
+    for (i in 1:nrow(Data)){ for (j in 1:ncol(Data)){ Data[i,j] <- Data[i, j]/desviation[j]}}
   }
   
   
-  # SVD options
-  if(SVD==1|SVD=="row"){
-    coordgenotype <- svd(matrixdata)$u %*% diag(svd(matrixdata)$d)
-    coordenviroment <- svd(matrixdata)$v
+  # SVP options
+  
+  if(SVP==0|SVP=="gge"){
+    coordgenotype <- svd(Data)$u * sqrt(nrow(Data)-1)
+    coordenviroment  = t(Data) %*% svd(Data)$u / sqrt(nrow(Data)-1)
     d1 = (max(coordenviroment[, 1]) - min(coordenviroment[,1]))/(max(coordgenotype[, 1]) -  min(coordgenotype[, 1]))
     d2 = (max(coordenviroment[, 2]) - min(coordenviroment[,2]))/(max(coordgenotype[, 2]) -  min(coordgenotype[, 2]))
     d = max(d1, d2)
     coordenviroment <- coordenviroment/d
   }
   
-  if(SVD==2|SVD=="column"){
-    coordgenotype <- svd(matrixdata)$u
-    coordenviroment <- svd(matrixdata)$v %*% diag(svd(matrixdata)$d)
+  
+  
+  if(SVP==1|SVP=="row"){
+    coordgenotype <- svd(Data)$u %*% diag(svd(Data)$d)
+    coordenviroment <- svd(Data)$v
+    d1 = (max(coordenviroment[, 1]) - min(coordenviroment[,1]))/(max(coordgenotype[, 1]) -  min(coordgenotype[, 1]))
+    d2 = (max(coordenviroment[, 2]) - min(coordenviroment[,2]))/(max(coordgenotype[, 2]) -  min(coordgenotype[, 2]))
+    d = max(d1, d2)
+    coordenviroment <- coordenviroment/d
+  }
+  
+  if(SVP==2|SVP=="column"){
+    coordgenotype <- svd(Data)$u
+    coordenviroment <- svd(Data)$v %*% diag(svd(Data)$d)
     d1 = (max(coordgenotype[, 1]) - min(coordgenotype[,1]))/(max(coordenviroment[, 1]) -  min(coordenviroment[, 1]))
     d2 = (max(coordgenotype[, 2]) - min(coordgenotype[,2]))/(max(coordenviroment[, 2]) -  min(coordenviroment[, 2]))
     d = max(d1, d2)
     coordgenotype <- coordgenotype/d
   }
-  if(SVD==3|SVD=="dual"){
-    coordgenotype <- svd(matrixdata)$u %*% diag(svd(matrixdata)$d)
-    coordenviroment <- svd(matrixdata)$v %*% diag(svd(matrixdata)$d)
+  if(SVP==3|SVP=="dual"){
+    coordgenotype <- svd(Data)$u %*% diag(svd(Data)$d)
+    coordenviroment <- svd(Data)$v %*% diag(svd(Data)$d)
   }
-  if(SVD==4|SVD=="symmetrical"){
-    coordgenotype <- svd(matrixdata)$u %*% diag(sqrt(svd(matrixdata)$d))
-    coordenviroment <- svd(matrixdata)$v %*% diag(sqrt(svd(matrixdata)$d))
+  if(SVP==4|SVP=="symmetrical"){
+    coordgenotype <- svd(Data)$u %*% diag(sqrt(svd(Data)$d))
+    coordenviroment <- svd(Data)$v %*% diag(sqrt(svd(Data)$d))
   }
 
-  xtext <- rbind(coordgenotype,coordenviroment)[,1]
-  ytext <- rbind(coordgenotype,coordenviroment)[,2]
+  eigenvalues = svd(Data)$d
   
-  valorespropios = svd(matrixdata)$d
-  
-  vartotal = round(as.numeric(sum(valorespropios^2)),2)
-  varexpl = round(as.numeric((valorespropios^2/vartotal) *100), 2)
+  vartotal = round(as.numeric(sum(eigenvalues^2)),2)
+  varexpl = round(as.numeric((eigenvalues^2/vartotal) *100), 2)
   
   
-  GGEModel=list(fit="internal",coordgenotype=coordgenotype,coordenviroment=coordenviroment,xtext=xtext,ytext=ytext,
-                valorespropios=valorespropios,vartotal=vartotal,varexpl=varexpl,labelgen=labelgen,labelenv=labelenv,axes=ejes,matrixdata=matrixdata,
-                centering=centering,scaling=scaling,SVD=SVD)
+  GGEModel=list(coordgenotype=coordgenotype,coordenviroment=coordenviroment,
+                eigenvalues=eigenvalues,vartotal=vartotal,varexpl=varexpl,labelgen=labelgen,labelenv=labelenv,labelaxes=labelaxes,Data=Data,
+                centering=centering,scaling=scaling,SVP=SVP)
   class(GGEModel)<-"GGEModel"
   return(GGEModel) 
 }

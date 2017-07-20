@@ -2,12 +2,12 @@
 % Please edit documentation in R/DiscRep.R
 \name{DiscRep}
 \alias{DiscRep}
-\title{Discrimination vs. representativeness}
+\title{Discrimination vs. representativeness biplot}
 \usage{
 DiscRep(GGEModel, ...)
 }
 \arguments{
-\item{GGEModel}{An object of class "GGEModel" or "gge"}
+\item{GGEModel}{An object of class \code{GGEModel} or \code{gge}}
 
 \item{...}{Other arguments sent to \code{\link[GGEBiplots]{GGEPlot}}}
 }
@@ -15,10 +15,9 @@ DiscRep(GGEModel, ...)
 Evaluating the environments based on both discriminating ability and representativeness
 }
 \examples{
-library(agricolae)
-data(plrv)
-GxEMeans<-tapply(plrv$Yield,list(plrv$Genotype,plrv$Locality),mean,na.rm=TRUE)
-GGE<-GGEModel(GxEMeans)
-DiscRep(GGE)
+library(GGEBiplotGUI)
+data(Ontario)
+GGE1<-GGEModel(Ontario)
+DiscRep(GGE1)
 }
 \keyword{GGE}

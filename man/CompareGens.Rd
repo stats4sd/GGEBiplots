@@ -2,16 +2,16 @@
 % Please edit documentation in R/CompareGens.R
 \name{CompareGens}
 \alias{CompareGens}
-\title{Compare the performance of two genotypes across all environments}
+\title{Compare two genotypes biplot}
 \usage{
 CompareGens(GGEModel, G1, G2, ...)
 }
 \arguments{
-\item{GGEModel}{An object of class "GGEModel" or "gge"}
+\item{GGEModel}{An object of class \code{GGEModel} or \code{gge}}
 
-\item{G1}{genotype to compare. Must be a string which perfectly matches a genotype label}
+\item{G1}{genotype to compare. Must be a string which matches a genotype label}
 
-\item{G2}{genotype to compare. Must be a string which perfectly matches a genotype label and not equal to G1}
+\item{G2}{genotype to compare. Must be a string which matches a genotype label and not equal to G1}
 
 \item{...}{Other arguments sent to \code{\link[GGEBiplots]{GGEPlot}}}
 }
@@ -19,10 +19,9 @@ CompareGens(GGEModel, G1, G2, ...)
 Compare the performance of two genotypes across all environments
 }
 \examples{
-library(agricolae)
-data(plrv)
-GxEMeans<-tapply(plrv$Yield,list(plrv$Genotype,plrv$Locality),mean,na.rm=TRUE)
-GGE<-GGEModel(GxEMeans)
-CompareGens(GGE,"Unica","Canchan")
+library(GGEBiplotGUI)
+data(Ontario)
+GGE1<-GGEModel(Ontario)
+CompareGens(GGE1,"cas","luc")
 }
 \keyword{GGE}

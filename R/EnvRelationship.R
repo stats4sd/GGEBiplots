@@ -1,15 +1,13 @@
 #' Relationship between environments
-#' @param GGEModel An object of class "GGEModel" or "gge"
+#' @param GGEModel An object of class \code{GGEModel} or \code{gge}
 #' @param ... Other arguments sent to \code{\link[GGEBiplots]{GGEPlot}}
 #' @keywords GGE
 #' @export
 #' @examples
-#' library(agricolae)
-#' data(plrv)
-#' GxEMeans<-tapply(plrv$Yield,list(plrv$Genotype,plrv$Locality),mean,na.rm=TRUE)
-#' GGE<-GGEModel(GxEMeans)
-#' EnvRelationship(GGE)
-
+#' library(GGEBiplotGUI)
+#' data(Ontario)
+#' GGE1<-GGEModel(Ontario)
+#' EnvRelationship(GGE1)
 EnvRelationship<-function(GGEModel,...){
   GGEPlot(GGEModel,type=4,...)
 }
