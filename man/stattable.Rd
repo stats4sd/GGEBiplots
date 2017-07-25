@@ -2,29 +2,30 @@
 % Please edit documentation in R/stattable.R
 \name{stattable}
 \alias{stattable}
-\title{Produce a 2 way summary table of results}
+\title{Produce a two-way summary table of results}
 \usage{
 stattable(rowfactor, columnfactor, outcome, FUN = mean, ...)
 }
 \arguments{
-\item{rowfactor}{vector containing factor variable to be included in the rows}
+\item{rowfactor}{variable to be included in the rows}
 
-\item{columnfactor}{vector containing facctor variable to be included in the rows}
+\item{columnfactor}{variable to be included in the columns}
 
-\item{outcome}{vector containing numeric outcome values}
+\item{outcome}{vector containing outcome values}
 
 \item{FUN}{name of summary function to use}
 
-\item{...}{other arguments for FUN}
+\item{...}{other arguments for \code{FUN}}
 }
 \description{
-Exists as a convenience function to transform raw data into a nice format for
-other functions by design rather than as a side-effect of combining list with
-tapply
+Transforms raw data into a simple two-way table for use in
+\code{\link[GGEBiplots]{GGEModel}} with row names and column names. By design
+rather than just a side-effect of combining \code{list} with \code{tapply}
 }
 \examples{
-fakedata<-data.frame(expand.grid(Genotype=1:10,Environment=1:10,Rep=1:3),Outcome=rnorm(300))
-stattable(fakedata$Genotype,fakedata$Environment,fakedata$Outcome,na.rm=TRUE)
+simdata<-data.frame(expand.grid(Genotype=1:10,Environment=1:10,Rep=1:3),Outcome=rnorm(300))
+meantab<-stattable(simdata$Genotype,simdata$Environment,simdata$Outcome,FUN=mean,na.rm=TRUE)
+GGEPlot(GGEModel(meantab))
 }
 \keyword{2way}
 \keyword{GGEBiplotGUI}

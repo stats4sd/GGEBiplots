@@ -2,19 +2,19 @@ Package: GGEBiplots
 Title: GGE Biplots with 'ggplot2'
 Version: 0.1.1
 Authors@R: c(person("Sam", "Dumble", email = "s.dumble@stats4sd.org", role = c("aut", "cre")),person("Elisa", "Frutos Bernal", email = "efb@usal.es", role = c("ctb")),person("Purificacion", "Galindo Villardon", email = "pgalindo@usal.es", role = c("ctb")))
-Description: Genotype plus genotype-by-environment (GGE) biplots rendered using \pkg{ggplot2}. Provides a command line interface to all of the functionality of 'GGEBiplotGUI'.
+Description: Genotype plus genotype-by-environment (GGE) biplots rendered using 'ggplot2'. Provides a command line interface to all of the functionality contained within 'GGEBiplotGUI'.
 Depends: R (>= 3.3.1)
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
 Imports:
-    ggplot2 (>= 2.2.0),
-    ggforce (>= 0.1.1),
-    scales (>= 0.4.1),
+   	ggplot2 (>= 2.2.0),
+    	ggforce (>= 0.1.1),
+    	scales (>= 0.4.1),
 	grDevices (>= 3.3.1),
 	stats (>= 3.3.1),
-    GGEBiplotGUI (>= 1.0-9),
+    	GGEBiplotGUI (>= 1.0-9),
 	grid (>= 3.3.1),
 	utils (>= 3.3.1),
-    gge (>= 1.2)
+    	gge (>= 1.2)
 RoxygenNote: 6.0.1.9000

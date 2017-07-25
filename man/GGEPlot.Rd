@@ -25,9 +25,9 @@ environments. See \code{\link[GGEBiplots]{RankEnv}} \item Mean vs.
 stability. See \code{\link[GGEBiplots]{MeanStability}} \item Ranking
 gentoypes See \code{\link[GGEBiplots]{RankGen}}}}
 
-\item{d1}{component to plot on x axis. Defaults to 1}
+\item{d1}{PCA component to plot on x axis. Defaults to 1}
 
-\item{d2}{component to plot on y axis. Defaults to 2}
+\item{d2}{PCA component to plot on y axis. Defaults to 2}
 
 \item{selectedE}{name of the environment to examine when type=2. Must be a 
 string which matches an environment label}

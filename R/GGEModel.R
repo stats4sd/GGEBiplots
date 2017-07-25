@@ -65,7 +65,7 @@ GGEModel <- function(Data,centering="tester",scaling="none",SVP="column") {
     warning(paste("scaling method",scaling,"not found; defaulting to no scaling"))
     sd="none"
   }
-  labelaxes <- paste("AXIS",1:ncol(diag(svd(Data)$d)), sep = "")
+  labelaxes <- paste("Component ",1:ncol(diag(svd(Data)$d)), sep = "")
   
   
   # Centering options
