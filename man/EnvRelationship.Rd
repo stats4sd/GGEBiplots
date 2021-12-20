@@ -15,7 +15,6 @@ EnvRelationship(GGEModel, ...)
 Relationship between environments
 }
 \examples{
-library(GGEBiplotGUI)
 data(Ontario)
 GGE1<-GGEModel(Ontario)
 EnvRelationship(GGE1)

@@ -15,7 +15,6 @@ RankEnv(GGEModel, ...)
 Ranking environments with respect to the ideal environment
 }
 \examples{
-library(GGEBiplotGUI)
 data(Ontario)
 GGE1<-GGEModel(Ontario)
 RankEnv(GGE1)

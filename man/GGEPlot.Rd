@@ -4,12 +4,29 @@
 \alias{GGEPlot}
 \title{GGE biplots with \pkg{ggplot2}}
 \usage{
-GGEPlot(GGEModel, type = 1, d1 = 1, d2 = 2, selectedE = NA,
-  selectedG = NA, selectedG1 = NA, selectedG2 = NA,
-  colGen = "forestgreen", colEnv = "blue", colSegment = "red",
-  colHull = "black", sizeGen = 4, sizeEnv = 4, largeSize = 4.5,
-  axis_expand = 1.2, axislabels = TRUE, axes = TRUE, limits = TRUE,
-  titles = TRUE, footnote = TRUE)
+GGEPlot(
+  GGEModel,
+  type = 1,
+  d1 = 1,
+  d2 = 2,
+  selectedE = NA,
+  selectedG = NA,
+  selectedG1 = NA,
+  selectedG2 = NA,
+  colSegment = "red",
+  colHull = "black",
+  largeSize = 4.5,
+  axis_expand = 1.2,
+  axislabels = TRUE,
+  axes = TRUE,
+  limits = TRUE,
+  titles = TRUE,
+  footnote = TRUE,
+  textGen = element_text(family = "", face = 1, color = "forestgreen", size = 4, hjust
+    = 0, vjust = 0, angle = 0),
+  textEnv = element_text(family = "", face = 1, color = "blue", size = 4, hjust = 0,
+    vjust = 0, angle = 0)
+)
 }
 \arguments{
 \item{GGEModel}{An object of class \code{GGEModel} or \code{gge}}
@@ -29,62 +46,56 @@ gentoypes See \code{\link[GGEBiplots]{RankGen}}}}
 
 \item{d2}{PCA component to plot on y axis. Defaults to 2}
 
-\item{selectedE}{name of the environment to examine when type=2. Must be a 
+\item{selectedE}{name of the environment to examine when type=2. Must be a
 string which matches an environment label}
 
 \item{selectedG}{name of the genotype to examine when type=3. Must be a string
 which matches a genotype label}
 
-\item{selectedG1}{name of a genotype to compare when type=5. Must be a string 
+\item{selectedG1}{name of a genotype to compare when type=5. Must be a string
 which matches a genotype label}
 
-\item{selectedG2}{name of a genotype to compare when type=5. Must be a string 
+\item{selectedG2}{name of a genotype to compare when type=5. Must be a string
 which matches a genotype label and not equal to selectedG1}
-
-\item{colGen}{colour for genotype attributes on biplot. Defaults to 
-"forestgreen"}
-
-\item{colEnv}{colour for environment attributes on biplot. Defaults to "blue"}
 
 \item{colSegment}{colour for segment or circle lines. Defaults to "red"}
 
 \item{colHull}{colour for hull when type=6. Defaults to "black"}
 
-\item{sizeGen}{text size for genotype labels. Defaults to 4}
-
-\item{sizeEnv}{text size for environment labels. Defaults to 4}
-
 \item{largeSize}{text size to use for larger labels where type=5, used for the
 two selected genotypes, and where type=6, used for the outermost genotypes.
 Defaults to 4.5}
 
-\item{axis_expand}{multiplication factor to expand the axis limits by to 
+\item{axis_expand}{multiplication factor to expand the axis limits by to
 enable fitting of labels. Defaults to 1.2}
 
 \item{axislabels}{logical. If TRUE then include automatically generated labels
 for axes}
 
-\item{axes}{logical. If TRUE then include x and y axes going through the 
+\item{axes}{logical. If TRUE then include x and y axes going through the
 origin}
 
 \item{limits}{logical. If TRUE then automatically rescale axes}
 
 \item{titles}{logical. If TRUE then include automatically generated titles}
 
-\item{footnote}{logical. If TRUE then include automatically generated footbote}
+\item{footnote}{logical. If TRUE then include automatically generated footnote}
+
+\item{textGen}{element_text for genotype labels}
+
+\item{textEnv}{element_text for environment labels}
 }
 \value{
 A biplot of class \code{ggplot}
 }
 \description{
-Produces the GGE biplot as an object of class 'ggplot' from a model produced 
-by a call to either \code{\link[GGEBiplots]{GGEModel}} or 
-\code{\link[gge]{gge}}. Nearly all stylistic attributes of output can either 
-be customised within the function or disabled so that the user can customise 
+Produces the GGE biplot as an object of class 'ggplot' from a model produced
+by a call to either \code{\link[GGEBiplots]{GGEModel}} or
+\code{\link[gge]{gge}}. Nearly all stylistic attributes of output can either
+be customised within the function or disabled so that the user can customise
 output to their own liking.
 }
 \examples{
-library(GGEBiplotGUI)
 data(Ontario)
 GGE1<-GGEModel(Ontario)
 GGEPlot(GGE1)
@@ -94,10 +105,10 @@ GGEPlot(GGE1)
 library(gge)
 GGE2<-gge(as.matrix(Ontario))
 GGEPlot(GGE2)
-   
+
 }
 \references{
-Yan W, Kang M (2003). \emph{GGE Biplot Analysis: A Graphical Tool 
+Yan W, Kang M (2003). \emph{GGE Biplot Analysis: A Graphical Tool
  for Breeders, Geneticists, and Agronomists}. CRC Press.
 }
 \keyword{Biplot}

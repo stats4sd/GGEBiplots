@@ -1,5 +1,5 @@
 #' Produce a two-way summary table of results
-#' 
+#'
 #' Transforms raw data into a simple two-way table for use in
 #' \code{\link[GGEBiplots]{GGEModel}} with row names and column names. By design
 #' rather than just a side-effect of combining \code{list} with \code{tapply}

@@ -19,7 +19,6 @@ CompareGens(GGEModel, G1, G2, ...)
 Compare the performance of two genotypes across all environments
 }
 \examples{
-library(GGEBiplotGUI)
 data(Ontario)
 GGE1<-GGEModel(Ontario)
 CompareGens(GGE1,"cas","luc")

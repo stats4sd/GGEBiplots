@@ -18,7 +18,6 @@ environment label}
 Ranking the cultivars based on their performance in any given environment
 }
 \examples{
-library(GGEBiplotGUI)
 data(Ontario)
 GGE1<-GGEModel(Ontario)
 ExamineEnv(GGE1,"WP93")

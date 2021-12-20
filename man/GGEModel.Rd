@@ -2,51 +2,50 @@
 % Please edit documentation in R/GGEModel.R
 \name{GGEModel}
 \alias{GGEModel}
-\title{Produces genotype plus genotype-by-environment model from a 2-way table of 
+\title{Produces genotype plus genotype-by-environment model from a 2-way table of
 means}
 \usage{
 GGEModel(Data, centering = "tester", scaling = "none", SVP = "column")
 }
 \arguments{
-\item{Data}{a data frame or matrix containing genotype by environment means 
-with the genotypes in rows and the environments in columns. row names and 
-column names should be set to indicate the genotype names and environment 
+\item{Data}{a data frame or matrix containing genotype by environment means
+with the genotypes in rows and the environments in columns. row names and
+column names should be set to indicate the genotype names and environment
 names.}
 
-\item{centering}{centering method. Either "tester" for tester centered 
-(G+GE), "global" for global centered (E+G+GE), "double" for double centred 
-(GE) or "none" for no centering. Models produced without centering cannot 
+\item{centering}{centering method. Either "tester" for tester centered
+(G+GE), "global" for global centered (E+G+GE), "double" for double centred
+(GE) or "none" for no centering. Models produced without centering cannot
 be used in the \code{\link[GGEBiplots]{GGEPlot}} function.}
 
-\item{scaling}{scaling method. Either "sd" for standard deviation or "none" 
+\item{scaling}{scaling method. Either "sd" for standard deviation or "none"
 for no scaling.}
 
-\item{SVP}{method for singular value partitioning. Either 
+\item{SVP}{method for singular value partitioning. Either
 "row","column","dual" or "symmetrical".}
 }
 \value{
-A list of class \code{GGEModel} containing: 
+A list of class \code{GGEModel} containing:
   \item{coordgenotype}{plotting coordinates for genotypes from all
   components} \item{coordenviroment}{plotting coordinates for environments
   from all components} \item{eigenvalues}{vector of eigenvalues from each
   component} \item{vartotal}{overall variance} \item{varexpl}{percentage of
-  variance explained by each component} \item{labelgen}{genotype names} 
-  \item{labelenv}{environment names} \item{axes}{axis labels} 
+  variance explained by each component} \item{labelgen}{genotype names}
+  \item{labelenv}{environment names} \item{axes}{axis labels}
   \item{Data}{scaled and centered input data} \item{centering}{name of
   centering method} \item{scaling}{name of scaling method} \item{SVP}{name of
   SVP method}
 }
 \description{
-Calculates the GGE model where presented with a two way table of means with 
-genotypes in rows, where genotype names are set as row names, and 
+Calculates the GGE model where presented with a two way table of means with
+genotypes in rows, where genotype names are set as row names, and
 environments in columns, where environment names are set as column names.
 This function serves as a command line interface to the internal code
-contained within \code{\link[GGEBiplotGUI]{GGEBiplot}}. For dealing with
+contained within the archived package 'GGEBiplotGUI'. For dealing with
 missing data then a better implementation is available through
 \code{\link[gge]{gge}}.
 }
 \examples{
-library(GGEBiplotGUI)
 data(Ontario)
 GGE1<-GGEModel(Ontario)
 GGEPlot(GGE1)
@@ -56,7 +55,7 @@ Yan W, Kang M (2003). \emph{GGE Biplot Analysis: A Graphical Tool
   for Breeders, Geneticists, and Agronomists}. CRC Press.
 
 Yan W, Kang M (2002). \emph{Singular-Value Partitioning in Biplot
-  Analysis of Multienvironment Trial Data}. Agronomy Journal, 94, 990-996. 
+  Analysis of Multienvironment Trial Data}. Agronomy Journal, 94, 990-996.
   \url{http://dx.doi.org/10.2134/agronj2002.0990}
 }
 \keyword{GGE}

@@ -9,8 +9,8 @@ RankGen(GGEModel, axis_expand = 1.4, ...)
 \arguments{
 \item{GGEModel}{An object of class \code{GGEModel} or \code{gge}}
 
-\item{axis_expand}{multiplication factor to expand the axis limits by to 
-enable fitting of labels. Defaults to 1.4 for genotype ranking plot as the 
+\item{axis_expand}{multiplication factor to expand the axis limits by to
+enable fitting of labels. Defaults to 1.4 for genotype ranking plot as the
 circles usually extend beyond limits of the other biplot types.}
 
 \item{...}{Other arguments sent to \code{\link[GGEBiplots]{GGEPlot}}}
@@ -19,7 +19,6 @@ circles usually extend beyond limits of the other biplot types.}
 Ranking genotypes with respect to the ideal genotype
 }
 \examples{
-library(GGEBiplotGUI)
 data(Ontario)
 GGE1<-GGEModel(Ontario)
 RankGen(GGE1)

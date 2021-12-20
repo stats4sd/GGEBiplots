@@ -15,7 +15,6 @@ WhichWon(GGEModel, ...)
 Identifying the 'best' cultivar in each environment
 }
 \examples{
-library(GGEBiplotGUI)
 data(Ontario)
 GGE1<-GGEModel(Ontario)
 WhichWon(GGE1)

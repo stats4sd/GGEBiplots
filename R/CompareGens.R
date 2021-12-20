@@ -1,5 +1,5 @@
 #' Compare two genotypes biplot
-#' 
+#'
 #' Compare the performance of two genotypes across all environments
 #' @param GGEModel An object of class \code{GGEModel} or \code{gge}
 #' @param G1 genotype to compare. Must be a string which matches a genotype label
@@ -8,7 +8,6 @@
 #' @keywords GGE
 #' @export
 #' @examples
-#' library(GGEBiplotGUI)
 #' data(Ontario)
 #' GGE1<-GGEModel(Ontario)
 #' CompareGens(GGE1,"cas","luc")

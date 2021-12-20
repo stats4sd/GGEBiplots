@@ -15,7 +15,6 @@ DiscRep(GGEModel, ...)
 Evaluating the environments based on both discriminating ability and representativeness
 }
 \examples{
-library(GGEBiplotGUI)
 data(Ontario)
 GGE1<-GGEModel(Ontario)
 DiscRep(GGE1)

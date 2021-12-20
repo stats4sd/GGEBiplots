@@ -17,7 +17,6 @@ ExamineGen(GGEModel, Gen, ...)
 Ranking the environments based on the relative performance of any given cultivar
 }
 \examples{
-library(GGEBiplotGUI)
 data(Ontario)
 GGE1<-GGEModel(Ontario)
 ExamineGen(GGE1,"cas")

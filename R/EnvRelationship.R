@@ -4,7 +4,6 @@
 #' @keywords GGE
 #' @export
 #' @examples
-#' library(GGEBiplotGUI)
 #' data(Ontario)
 #' GGE1<-GGEModel(Ontario)
 #' EnvRelationship(GGE1)

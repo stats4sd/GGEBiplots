@@ -15,7 +15,6 @@ MeanStability(GGEModel, ...)
 Evaluating cultivars based on both average yield and stability
 }
 \examples{
-library(GGEBiplotGUI)
 data(Ontario)
 GGE1<-GGEModel(Ontario)
 MeanStability(GGE1)

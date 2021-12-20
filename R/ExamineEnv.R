@@ -1,5 +1,5 @@
 #' Examine an environment
-#' 
+#'
 #' Ranking the cultivars based on their performance in any given environment
 #' @param GGEModel An object of class \code{GGEModel} or \code{gge}
 #' @param Env environment to examine. Must be a string which matches an
@@ -8,7 +8,6 @@
 #' @keywords GGE
 #' @export
 #' @examples
-#' library(GGEBiplotGUI)
 #' data(Ontario)
 #' GGE1<-GGEModel(Ontario)
 #' ExamineEnv(GGE1,"WP93")
